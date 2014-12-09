@@ -8,7 +8,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 	class Rt_Mailbox {
 
-		static $page_name = 'Mailbox';
+		static $page_name = 'MailBox';
 
 		static $rt_mime_types = array(
 			'pdf'  => 'application/pdf',
