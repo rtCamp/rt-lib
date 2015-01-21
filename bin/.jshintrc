@@ -8,8 +8,9 @@
 	"noarg": true,
 	"quotmark": "single",
 	"trailing": true,
-	"undef": true,
-	"unused": true,
+	"undef": false,
+	"unused": false,
+  	"shadow": true,
 
 	"browser": true,
 	"devel": true,

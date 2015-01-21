@@ -31,7 +31,13 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 		 */
 		var $client = null;
 
-		function __construct() {
+		/**
+		 * @var $base_url - url for page
+		 */
+		var $base_url;
+
+		function __construct( $base_url ) {
+			$this->base_url = $base_url;
 			add_action( 'init', array( $this, 'save_replay_by_email' ) );
 		}
 
@@ -46,6 +52,12 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			global $rt_mail_settings, $rt_imap_server_model;
 
 			$imap_servers = $rt_imap_server_model->get_all_servers();
+
+			$server_types = array();
+			if ( ! empty( $imap_servers ) ){
+				$server_types['imap'] = 'IMAP';
+			}
+			$server_types = apply_filters( 'rt_mailbox_server_type', $server_types );
 
 			if ( empty( $imap_servers ) ){
 				echo '<div id="error_handle" class=""><p>'.__( 'Please set Imap Servers detail on ' ).'<a href="' . esc_url( admin_url( 'admin.php?page='.Rt_Mailbox::$page_name.'&tab=imap' ) ) . '">IMAP </a>  Page </p></div>';
@@ -72,8 +84,8 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 									<td>
 										<select id="rtmailbox_select_email_acc_type">
 											<option value=""><?php _e( 'Select Type' ); ?></option>
-											<?php if ( ! empty( $imap_servers ) ){?>
-												<option value="imap"><?php _e( 'IMAP' ); ?></option>
+											<?php foreach ( $server_types as $key => $value ) {?>
+												<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
 											<?php } ?>
 										</select>
 									</td>
@@ -113,8 +125,9 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 			?>
 			<form id="frm-new-mail" method="post" action="">
 				<div class="mail_list" >
-					<h2 class="title">Mail List</h2><?php
+					<h3 class="title">Mail List</h3><?php
 					$rCount = 0;
+					$is_empty_mailbox_check = true;
 					$google_acs = $rt_mail_settings->get_user_google_ac();
 					if ( isset( $google_acs ) && ! empty( $google_acs ) ){
 						foreach ( $google_acs as $ac ){
@@ -127,7 +140,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							$mail_folders   = array_filter( explode( ',', $mail_folders ) );
 							$inbox_folder   = ( isset( $ac->email_data['inbox_folder'] ) ) ? $ac->email_data['inbox_folder'] : '';
 							$token = $ac->outh_token;
-
+							$is_empty_mailbox_check = false;
 							if ( isset( $ac->email_data['picture'] ) ){
 								$img          = filter_var( $ac->email_data['picture'], FILTER_VALIDATE_URL );
 								$personMarkup = "<img src='$img?sz=96'>";
@@ -172,7 +185,7 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 											<br/><label><strong><?php _e( 'Mail Folders to read' ); ?></strong></label><br/>
 											<label>
 												<?php _e( 'Inbox Folder' ); ?>
-												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
+												<select data-email-id="<?php echo esc_attr( $ac->id ); ?>" class="mailbox-inbox-folder" name="inbox_folder[<?php echo esc_attr( $email ); ?>]" data-prev-value="<?php echo esc_attr( $inbox_folder ); ?>">
 													<option value=""><?php _e( 'Choose Inbox Folder' ); ?></option>
 													<?php if ( ! is_null( $all_folders ) ) { ?>
 														<?php $hdZendEmail->render_folders_dropdown( $all_folders, $value = $inbox_folder ); ?>
@@ -202,7 +215,6 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							jQuery(document).ready(function ($) {
 								$(document).on('change', 'select.mailbox-inbox-folder', function (e) {
 									e.preventDefault()
-									alert('called');
 									inbox = $(this).val();
 									prev_value = $(this).data('prev-value');
 									$(this).data('prev-value', inbox);
@@ -215,10 +227,18 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 							});
 						</script>
 					<?php } ?>
+					<?php
+					if ( $is_empty_mailbox_check ){
+						?>
+						<p>You have no mailbox setup please setup one.</p>
+						<?php
+					}
+					?>
 				</div>
 				<input class="button button-primary" type="submit" value="Save">
 			</form>
 			<?php
+			do_action( 'rt_mailbox_reply_by_email_view' );
 		}
 
 		public function save_replay_by_email() {
@@ -259,14 +279,18 @@ if ( ! class_exists( 'RT_Setting_Inbound_Email' ) ) {
 					}
 				}
 				if ( isset( $_REQUEST['email'] ) && is_email( $_REQUEST['email'] ) ) {
+					global $rt_mail_accounts_model, $rt_mail_crons;
+					$module = $rt_mail_accounts_model->get_mail_account( array( 'email' => $_REQUEST['email'] ) );
 					$rt_mail_settings->delete_user_google_ac( $_REQUEST['email'] );
+					$tmp = $module[0];
+					$rt_mail_crons->deregister_cron_for_module( $tmp->module );
 					echo '<script>';
 					//					window.location="' . esc_url_raw( add_query_arg(
 					//							array(
 					//								'post_type' => Rt_HD_Module::$post_type,
 					//								'page'      => 'rthd-settings',
 					//							), admin_url( 'admin.php' ) ) ) . '";</script>';
-						echo 'window.location="'. admin_url( 'admin.php' ) .'?page='.Rt_Mailbox::$page_name.'"; </script>';
+						echo 'window.location="'. $this->base_url . '&type=mailbox' .'"; </script>';
 					die();
 				}
 				if ( isset( $_REQUEST['rtmailbox_add_imap_email'] ) ) {
