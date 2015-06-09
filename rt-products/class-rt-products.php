@@ -20,7 +20,7 @@ if ( ! class_exists( 'Rt_Products' ) ) {
 		 * Product taxonomy Slug
 		 * @var string
 		 */
-		static $product_slug = 'product';
+		static $product_slug = 'rt-product';
 
 		static $term_product_id_meta_key = '_product_id';
 
