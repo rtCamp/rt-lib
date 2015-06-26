@@ -240,10 +240,18 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 
 		/**
 		 * render mailbox setting ui
-		 * @param $module
 		 *
+		 * @param        $module
+		 * @param string $reload_page_url
+		 * If page requires reload after successfull connection pass url where to reload or redirect.
 		 */
-		function render_mailbox_setting_page( $module ) {
+		function render_mailbox_setting_page( $module, $reload_page_url = '' ) {
+			if ( ! empty( $reload_page_url ) ) {
+				?><script>
+					var reload_url = '<?php echo ( $reload_page_url ); ?>';
+				</script>
+				<?php
+			}
 			?>
 			<div id="rtmailbox-page" class="wrap">
 				<div id="mailbox-list" class="mailbox-list">
