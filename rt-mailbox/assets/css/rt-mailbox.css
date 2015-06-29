@@ -81,6 +81,10 @@ div.mailbox-folder-list ul li {
     display: none;
 }
 
+ul.rtmailbox_provider_list li {
+	margin-right: 7px;
+	float: left;
+}
 
 
 /*
