@@ -517,7 +517,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 						<tr>
 							<td colspan="4">	<hr>
-								<strong>Default settings</strong><hr></td>
+								<strong>Other settings</strong><hr></td>
 						</tr>
 				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );
 
@@ -553,7 +553,6 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 							</td>
 						</tr>
 							<tr>
-								<td></td>
 								<td>
 									<?php
 									$form_fields = '<select name="otherfield0" class="other-field">';
