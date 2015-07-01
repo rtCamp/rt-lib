@@ -519,8 +519,10 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 							<td colspan="4">	<hr>
 								<strong>Default settings</strong><hr></td>
 						</tr>
-				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );  ?>
-							<tr>
+				<?php echo apply_filters( 'rtlib_add_mapping_field_ui', $post_type );
+
+				/*
+				 * 	<!--<tr>
 								<td>
 									Date Format
 								</td>
@@ -530,23 +532,17 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								</td>
 								<td><p class="description"> for example enter: l M d, Y H:i e : Friday Feb 13, 2015 10:01 UTC</p></td>
 								<td></td>
-							</tr>
+							</tr>-->
+				 *
+				 *
+				 */?>
+
 							<tr>
 								<td>
 									Title Prefix
 								</td>
 								<td>
 									<input type="text" value="" name="titleprefix"/>
-								</td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>
-									Title Suffix
-								</td>
-								<td>
-									<input type="text" value="" name="titlesuffix"/>
 								</td>
 								<td></td>
 								<td></td>
