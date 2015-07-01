@@ -310,6 +310,10 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					echo '<h2>' . __( 'Importer' ) . '</h2>'; }
 				//$this->importer_tab(); ?>
 				<div class="gravity_importer_tab">
+					<?php if ( $noFormflag ) {
+						echo balanceTags( $form_select );
+					} else {
+					?>
 					<table>
 						<tr>
 							<td>
@@ -329,6 +333,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 					</table>
 					<div id="mapping-form"></div>
+				<?php } ?>
 				</div>
 				<!--<div class="csv_importer_tab">
 					<table class="form-table">
@@ -467,6 +472,13 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 				<div>Total Entries:
 				<strong><?php echo esc_html( $form_count['total'] ); ?></strong></div>
 			</div>
+				<?php
+
+				if ( empty( $form_data['fields'] ) ) {
+					echo 'Form doesn\'t seem to have any fields!';
+					die();
+				}
+				?>
 
 			<form method="post" action="" id="rtlibMappingForm" name="rtlibMappingForm">
 				<input type="hidden" name="mapSource" id="mapSource" value="<?php echo esc_attr( $form_id ); ?>"/>
@@ -561,7 +573,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 										if ( isset( $lfield['type'] ) && 'defined' == $lfield['type'] ) {
 											continue;
 										}
-										$form_fields .= '<option value="' . esc_attr( $lfield['slug'] ) . '">' . esc_html( ucfirst( $lfield['display_name'] ) ) . '</option>';
+										$form_fields .= '<option data-type="'.esc_attr( $lfield['type'] ).'" value="' . esc_attr( $lfield['slug'] ) . '">' . esc_html( ucfirst( $lfield['display_name'] ) ) . '</option>';
 									}
 									$form_fields .= '</select>';
 									echo balanceTags( $form_fields );
