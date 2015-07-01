@@ -359,6 +359,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 			add_action( 'wp_ajax_rtlib_gravity_dummy_data', array( $this, 'get_random_gravity_data' ) ); // Dummy data deisplay
 			add_action( 'wp_ajax_rtlib_map_import_feauture', array( $this, 'rtlib_map_import_feauture' ) ); // add entry in gravity mapper table
 			add_action( 'wp_ajax_rtlib_defined_map_feild_value', array( $this, 'rtlib_defined_map_field_value' ) );
+			add_action( 'wp_ajax_rtlib_sync_gf_importer', array( $this, 'rtlib_sync' ) );
 
 			add_action( 'gform_entry_info', array( $this, 'gravity_form_lead_meta' ), 1, 2 );
 			add_action( 'gform_entry_created', array( $this, 'rtlib_auto_import' ), 1, 2 );
@@ -584,7 +585,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 								</td>
 								<td></td>
 							</tr>
-							<tr>
+						<!--	<tr>
 								<td>
 
 								</td>
@@ -596,7 +597,7 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 
 								</td>
 								<td></td>
-							</tr>
+							</tr>-->
 						</tfoot>
 					</table>
 					<script>
@@ -701,6 +702,16 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 					do_action( 'rtlib_map_import_callback', $map_data, $form_id, $gravity_lead_id, $type, $forceImport, false );
 				}
 			}
+		}
+
+		public function rtlib_sync() {
+			$responce = array( 'status' => false );
+			if ( ! empty( $_POST['lead_id'] ) && ! empty( $_POST['form_id'] ) ) {
+				$this->rtlib_auto_import( array( 'id' => $_POST['lead_id'] ), array( 'id' => $_POST['form_id'] ) );
+				$responce['status'] = true;
+			}
+			echo json_encode( $responce );
+			die();
 		}
 
 		/**
