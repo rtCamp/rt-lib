@@ -847,7 +847,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 						}
 						$responce['attachements'][]        = $file;
 					} else {
-						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . '\r\n' );
+						error_log( 'Attachment Failed ... ' . esc_attr( $filename ) . "\r\n" );
 						ob_start();
 						error_log( var_export( $uploaded, true ) );
 						$data = ob_get_clean();
