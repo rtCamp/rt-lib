@@ -80,7 +80,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 					continue;
 				}
 				$email = $emailRow->email;
-				error_log( "\r\n" . sanitize_email( $email ) . " Selected. \r\n" );
+				error_log( sanitize_email( $email ) . " Selected. \r\n" );
 
 				$rt_mail_settings->update_sync_status( $email, true );
 				$last_sync_time = $emailRow->last_mail_time;

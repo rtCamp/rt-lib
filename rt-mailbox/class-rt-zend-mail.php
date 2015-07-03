@@ -413,7 +413,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 
 			foreach ( $mail_folders as $folder ) {
 				$storage->selectFolder( $folder );
-				error_log( sanitize_email( $email ) . ' : Reading - ' . esc_attr( $folder ) . "\r\n" );
+				error_log( ' Reading folder - ' . esc_attr( $folder ) . "\r\n" );
 				$sync_inbox_type = $folder;
 				if ( ! isset( $rt_mail_uid[ $sync_inbox_type ] ) ) {
 					$rt_mail_uid[ $sync_inbox_type ] = 0;
@@ -429,6 +429,7 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					$arrayMailIds = $storage->protocol->search( array( 'SINCE ' . $lastDate ) );
 				}
 				$this->rt_parse_email( $from_email , $email, $storage, $arrayMailIds, $user_id, $module );
+				error_log( ' Reading finish - ' . esc_attr( $folder ). "\r\n" );
 			}
 			$rt_mail_settings->update_sync_meta_time( $email, current_time( 'mysql' ) );
 			$rt_mail_settings->update_sync_status( $email, false );
