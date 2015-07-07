@@ -736,8 +736,9 @@ if ( ! class_exists( 'Rt_Zend_Mail' ) ) {
 					foreach ( $tmp as $header ) {
 						$originalBody .= htmlentities( $header->toString() ) ."\n";
 					}
-					$originalBody .= 'Body: ';
-					$originalBody .= $txtBody;
+					$originalBody .= "-- Start of Body -- \n";
+					$originalBody .= 'Body: ' . $txtBody;
+					$originalBody .= "\n -- End of Body -- ";
 
 					global $rt_mail_settings;
 					$ac = $rt_mail_settings -> get_email_acc( $email, $module );
