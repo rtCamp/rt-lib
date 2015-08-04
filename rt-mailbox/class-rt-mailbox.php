@@ -646,7 +646,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 				$available_email = rtmb_get_module_mailbox_email( $obj_data['email'], $obj_data['module'] );
 
 				if ( empty ( $available_email ) ) {
-					$email       = $obj_data['email'];
+					$email       =  trim ( $obj_data['email'] );
 					$password    = $obj_data['password'];
 
 					$Imap_folder = 'INBOX';
