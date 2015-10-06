@@ -25,7 +25,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 			register_deactivation_hook( $plugin_path_for_deactivate_cron, array(
 				$this,
-				'disable_cron_on_deactivation'
+				'disable_cron_on_deactivation',
 			) );
 
 		}
@@ -73,7 +73,7 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 		/**
 		 * Parse email
 		 *
-		 * @param $module
+		 * @internal param $module
 		 */
 		function rt_parse_email() {
 
