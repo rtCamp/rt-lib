@@ -92,7 +92,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 * Capability for Mailbox setup Page;
 		 * Default: manage_options
 		 */
-		function __construct( $plugin_path_for_deactivate_cron ) {
+		function __construct( $plugin_path_for_cron ) {
 
 			$this->default_imap_servers = array(
 				array(
@@ -118,7 +118,7 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 			$this->inti_global();
 			//			$this->default_imap_servers();
 
-			$this->init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron );
+			$this->init_rt_wp_mail_cron( $plugin_path_for_cron );
 
 			add_action( 'init', array( $this, 'rtmailbox_ajax' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ), 999 );
@@ -245,9 +245,9 @@ if ( ! class_exists( 'Rt_Mailbox' ) ) {
 		 *
 		 * @param $plugin_path_for_deactivate_cron
 		 */
-		function init_rt_wp_mail_cron( $plugin_path_for_deactivate_cron ) {
+		function init_rt_wp_mail_cron( $plugin_path_for_cron ) {
 			global $rt_mail_crons;
-			$rt_mail_crons = new Rt_Mail_Cron( $plugin_path_for_deactivate_cron );
+			$rt_mail_crons = new Rt_Mail_Cron( $plugin_path_for_cron );
 		}
 
 

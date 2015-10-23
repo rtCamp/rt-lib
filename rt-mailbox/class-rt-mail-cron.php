@@ -17,19 +17,17 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 
 	class Rt_Mail_Cron {
 
-		function __construct( $plugin_path_for_deactivate_cron ) {
+		function __construct( $plugin_path_for_cron ) {
+
+			register_activation_hook( $plugin_path_for_cron, array( $this, 'enable_cron_on_activation' ) );
 
 			add_filter( 'cron_schedules', array( $this, 'register_custom_schedule' ) );
 
 			add_action( 'init', array( $this, 'setup_schedule' ) );
 
-			register_deactivation_hook( $plugin_path_for_deactivate_cron, array(
-				$this,
-				'disable_cron_on_deactivation',
-			) );
+			register_deactivation_hook( $plugin_path_for_cron, array( $this, 'disable_cron_on_deactivation' ) );
 
 		}
-
 		function deregister_cron_for_module( $module ) {
 			wp_clear_scheduled_hook( 'rt_parse_email_cron', array( $module ) );
 			wp_clear_scheduled_hook( 'rt_send_email_cron' );
@@ -59,15 +57,18 @@ if ( ! class_exists( 'Rt_Mail_Cron' ) ) {
 			wp_clear_scheduled_hook( 'rt_parse_email_cron' );
 		}
 
-		function setup_schedule() {
-			add_action( 'rt_parse_email_cron', array( $this, 'rt_parse_email' ) );
-			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
+		function enable_cron_on_activation(){
 			if ( ! wp_next_scheduled( 'rt_parse_email_cron' ) ) {
 				wp_schedule_event( time(), 'every_5_minutes', 'rt_parse_email_cron' );
 			}
 			if ( ! wp_next_scheduled( 'rt_send_email_cron' ) ) {
 				wp_schedule_event( time(), 'every_minute', 'rt_send_email_cron' );
 			}
+		}
+
+		function setup_schedule(){
+			add_action( 'rt_parse_email_cron', array( $this, 'rt_parse_email' ) );
+			add_action( 'rt_send_email_cron', array( $this, 'rt_send_email' ) );
 		}
 
 		/**
