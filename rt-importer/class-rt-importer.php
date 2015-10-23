@@ -944,17 +944,21 @@ if ( ! class_exists( 'Rt_Importer' ) ) {
 		}
 
 		public function enqueue_scripts() {
-			if ( ! wp_script_is( 'jquery-ui-progressbar' ) ) {
-				wp_enqueue_script( 'jquery-ui-progressbar', '', array(
-					'jquery-ui-widget',
-					'jquery-ui-position',
-				), '1.9.2' );
+			$page  = isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '';
+			$pages = apply_filters( 'rt_lib_import_page', array( 'rtbiz-hd-settings' ) );
+			$pages = array_filter( $pages );
+			if ( ! empty( $pages ) && in_array( $page, $pages ) ) {
+				if ( ! wp_script_is( 'jquery-ui-progressbar' ) ) {
+					wp_enqueue_script( 'jquery-ui-progressbar', '', array(
+						'jquery-ui-widget',
+						'jquery-ui-position',
+					), '1.9.2' );
+				}
+				wp_enqueue_script( 'rt_importer', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/rt_importer.js', array( 'jquery' ), null, true );
+				wp_enqueue_script( 'rt_handlebars', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/handlebars.js', array( 'jquery' ), null, true );
+				wp_enqueue_style( 'jquery-ui-custom', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/css/jquery-ui-1.9.2.custom.css' );
+				wp_enqueue_style( 'importer-setting-css', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/css/rt_importer.css' );
 			}
-			wp_enqueue_script( 'rt_importer', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/rt_importer.js', array( 'jquery' ), null, true );
-			wp_enqueue_script( 'rt_handlebars', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/handlebars.js', array( 'jquery' ), null, true );
-
-			wp_enqueue_style( 'jquery-ui-custom', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/css/jquery-ui-1.9.2.custom.css' );
-			wp_enqueue_style( 'importer-setting-css', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'assets/css/rt_importer.css' );
 		}
 	}
 }
